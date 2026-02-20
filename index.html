@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>맞춤형화장품조제관리사 또기적 온라인</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- -----------------------
+     홈 화면
+----------------------- -->
+<div id="home" class="screen">
+    <h1 class="title">맞춤형화장품조제관리사<br>또기적 온라인</h1>
+
+    <!-- 캐릭터 -->
+    <div class="character-card">
+        <img src="character.png" alt="캐릭터">
+        <p>오늘도 함께 공부해볼까? 🌟</p>
+    </div>
+
+    <!-- 오늘의 개념 -->
+    <h3 class="section-title">오늘의 개념 한 줄</h3>
+    <div id="dailyConcept" class="concept-card">로딩 중...</div>
+
+    <div class="menu-buttons">
+        <button onclick="showScreen('quizMenu')">퀴즈</button>
+        <button onclick="showScreen('reviewMenu')">복습</button>
+    </div>
+
+    <!-- 상태창 -->
+    <div id="statusPanel" class="status-card">
+        <p>📘 학습 진도율: <span id="progress">12%</span></p>
+        <p>🔥 누적 학습일: <span id="studyDays">5</span>일</p>
+        <p>⭐ 경험치: <span id="exp">320</span>XP</p>
+    </div>
+</div>
+
+<!-- -----------------------
+     퀴즈 메뉴
+----------------------- -->
+<div id="quizMenu" class="screen hidden">
+  <h2>퀴즈 선택</h2>
+  <button onclick="startQuiz('ox')">스피드 체크 OX</button>
+  <button onclick="startQuiz('blank')">빈칸 채우기</button>
+  <button onclick="startQuiz('answerset')">정답 총집합</button>
+  <button onclick="startQuiz('cupid')">정답 큐피트</button>
+  <button onclick="showScreen('home')">← 홈으로</button>
+</div>
+
+<!-- -----------------------
+     문제 카드 화면
+----------------------- -->
+<div id="quizScreen" class="screen hidden">
+    <h2 id="quizTitle">문제</h2>
+
+    <div id="quizCard" class="quiz-card">
+        <p id="quizQuestion"></p>
+        <div id="quizOptions"></div>
+        <input id="blankInput" class="hidden" placeholder="정답 입력">
+        <p id="quizAnswer" class="hidden"></p>
+        <p id="quizExplanation" class="hidden exp-box"></p>
+    </div>
+
+    <div class="nav-buttons">
+        <button onclick="prevQuestion()">← 이전</button>
+        <button onclick="nextQuestion()">다음 →</button>
+    </div>
+
+    <button class="home-btn" onclick="showScreen('home')">🏠 홈으로</button>
+</div>
+
+<!-- -----------------------
+     복습 메뉴
+----------------------- -->
+<div id="reviewMenu" class="screen hidden">
+  <h2>복습 선택</h2>
+  <button onclick="showScreen('mindmap')">마인드맵</button>
+  <button onclick="showScreen('dosik')">도식카드</button>
+  <button onclick="showScreen('reviewCards')">복습 카드</button>
+  <button onclick="showScreen('home')">← 홈으로</button>
+</div>
+
+<!-- -----------------------
+     마인드맵
+----------------------- -->
+<div id="mindmap" class="screen hidden">
+  <h2>마인드맵</h2>
+  <img src="화조사마인드맵.png" class="full-img">
+  <button onclick="showScreen('reviewMenu')">← 복습으로</button>
+</div>
+
+<!-- -----------------------
+     도식카드
+----------------------- -->
+<div id="dosik" class="screen hidden">
+  <h2>도식카드</h2>
+  <div class="slider">
+    <img src="계면활성제의구성과작용.png">
+    <img src="화장품의유화방식.png">
+    <img src="피부의구조.png">
+    <img src="내용물 및 원료의 폐기 기준 및 절차.png">
+    <img src="입고된 원료 및 내용물 처리 순서.png">
+    <img src="위해 평가 단계.png">
+    <img src="원자의구조.png">
+  </div>
+  <button onclick="showScreen('reviewMenu')">← 복습으로</button>
+</div>
+
+<!-- -----------------------
+     복습카드 (플립 카드)
+----------------------- -->
+<div id="reviewCards" class="screen hidden">
+  <h2>복습 카드</h2>
+
+  <div id="flipContainer"></div>
+
+  <button onclick="showScreen('reviewMenu')">← 복습으로</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
