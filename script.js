@@ -1,171 +1,264 @@
-/* 화면 전환 */
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
-}
+/* ------------------------------------------
+    기본 전역 변수
+------------------------------------------- */
+let currentPage = "home";
+let quizType = "";
+let currentIndex = 0;
 
-/* 오늘의 개념 */
+let wrongNotes = JSON.parse(localStorage.getItem("wrongNotes") || "[]");
+
+/* 오늘의 개념 랜덤 */
 const conceptList = [
-  "계면활성제는 친수기/친유기로 구성된다.",
-  "유화 방식에는 O/W와 W/O가 있다.",
-  "표피층은 네 층으로 구성된다.",
-  "내용물 폐기 기준은 반드시 문서화한다.",
-  "징크·티타늄은 물리적 자외선 차단제이다.",
-  "UVA는 광노화의 원인이 된다."
+    "계면활성제는 친수기와 친유기를 동시에 가진다.",
+    "유화 방식의 핵심은 '물과 기름의 분산 안정화'이다.",
+    "표피는 5개 층으로 구성된다.",
+    "내용물 폐기는 기록·구분·이중 확인이 원칙이다.",
+    "화장품 원료는 입고 즉시 식별·보관·검수한다."
 ];
 
-function loadDailyConcept() {
-  const box = document.getElementById("dailyConcept");
-  if (box) {
-    box.innerText = conceptList[Math.floor(Math.random() * conceptList.length)];
-  }
+/* ------------------------------------------
+    퀴즈 데이터 (문제 / 정답 / 해설)
+------------------------------------------- */
+const quizData = {
+    ox: [
+        { q: "살리실릭애시드 여드름 완화 기준은 0.5%이다.", a: "O", exp: "맞다. 기능성 기준은 0.5%이다." },
+        { q: "징크옥사이드는 최대 25%까지 배합 가능하다.", a: "O", exp: "징크옥사이드와 티타늄디옥사이드는 25%까지 허용된다." },
+        { q: "양이온 계면활성제가 가장 자극이 낮다.", a: "X", exp: "자극은 양이온 > 음이온 > 양쪽성 > 비이온성 순." }
+    ],
+
+    blank: [
+        { q: "영유아·눈 화장용 제품의 미생물 허용 한도는 ____개/g(mL) 이하이다.", a: "500", exp: "총호기성생균수 허용 기준은 500 이하." },
+        { q: "과립층은 빛을 산란시키고 ____저지막을 형성한다.", a: "수분", exp: "과립층에 수분저지막이 존재한다." }
+    ],
+
+    multi: [
+        {
+            q: "가장 자극이 강한 계면활성제는?",
+            options: ["비이온성", "음이온성", "양쪽성", "양이온성"],
+            a: 4,
+            exp: "양이온성이 가장 자극이 강하다."
+        }
+    ],
+
+    connect: [
+        {
+            q: "개념을 올바르게 연결하시오.",
+            left: ["계면활성제", "유화", "표피"],
+            right: ["물+기름 분산", "친수기/친유기", "5개 층 구성"],
+            a: ["계면활성제-친수기/친유기", "유화-물+기름 분산", "표피-5개 층 구성"],
+            exp: "핵심 개념 짝을 정확히 이해해야 한다."
+        }
+    ],
+
+    review: [
+        { q: "화장품 정의의 핵심은 인체 작용이 ___해야 한다.", a: "경미", exp: "화장품은 인체에 대한 작용이 경미해야 한다." },
+        { q: "자격취소 후 재취득 가능 기간은?", a: "3년", exp: "취소된 날부터 3년이 지나야 다시 취득 가능." },
+        { q: "주민번호·여권번호 등은 무엇인가?", a: "고유식별정보", exp: "개인을 특정하기 위한 식별정보." }
+    ]
+};
+
+/* ------------------------------------------
+    화면 전환 (페이드 인/아웃)
+------------------------------------------- */
+function goPage(pageId) {
+    document.querySelector(`#${currentPage}`).classList.remove("active");
+    setTimeout(() => {
+        document.querySelector(`#${pageId}`).classList.add("active");
+        currentPage = pageId;
+    }, 150);
 }
-loadDailyConcept();
 
-/* -----------------------------------
-   문제 데이터(OX/빈칸/총집합/큐피트)
-   (정답 + 해설 포함)
------------------------------------ */
+/* ------------------------------------------
+    오늘의 개념 출력
+------------------------------------------- */
+function setTodayConcept() {
+    const rnd = Math.floor(Math.random() * conceptList.length);
+    document.getElementById("todayConcept").innerText = conceptList[rnd];
+}
 
-const OX = [
-  { q: "화장품의 정의에는 의약품이 포함된다.", a: false, exp: "의약품은 포함되지 않는다." },
-  { q: "자외선 차단 성분은 배합 한도를 초과할 수 없다.", a: true, exp: "자외선 차단 성분에는 규정된 최대치가 있다." },
-  { q: "표피 과립층은 자외선 산란 기능이 있다.", a: true, exp: "과립층에는 케라토히알린 등이 존재한다." }
-];
-
-const BLANK = [
-  { q: "맞춤형화장품 보고는 (_____)에 제출한다.", a: "식약처", exp: "맞춤형 조제는 식약처 보고 대상이다." }
-];
-
-const ANSWERSET = [
-  { q: "문1. 화장품 정의로 옳은 것은?", a: "②", exp: "강한 작용은 제외된다." }
-];
-
-const CUPID = [
-  { q: "표피 구조 연결", options:["각질층","유극층","과립층","기저층"], a:2, exp:"과립층은 자외선 산란, 엘라이딘 존재." }
-];
-
-/* -----------------------------------
-   내부 상태
------------------------------------ */
-let currentList = [];
-let index = 0;
-let mode = "";
-
-/* -----------------------------------
-   퀴즈 시작
------------------------------------ */
+/* ------------------------------------------
+    퀴즈 시작
+------------------------------------------- */
 function startQuiz(type) {
-  mode = type;
+    quizType = type;
+    currentIndex = 0;
 
-  if (type === "ox") currentList = OX;
-  if (type === "blank") currentList = BLANK;
-  if (type === "answerset") currentList = ANSWERSET;
-  if (type === "cupid") currentList = CUPID;
+    if (type === "ox") goPage("oxQuiz");
+    if (type === "blank") goPage("blankQuiz");
+    if (type === "multi") goPage("multiQuiz");
+    if (type === "connect") goPage("connectQuiz");
 
-  index = 0;
-  showScreen("quizScreen");
-  loadQuestion();
+    loadQuiz();
 }
 
-/* -----------------------------------
-   문제 표시
------------------------------------ */
-function loadQuestion() {
-  const q = currentList[index];
+/* ------------------------------------------
+    문제 로딩
+------------------------------------------- */
+function loadQuiz() {
+    const data = quizData[quizType];
+    const q = data[currentIndex];
 
-  document.getElementById("quizQuestion").innerText = q.q;
-  document.getElementById("quizAnswer").classList.add("hidden");
-  document.getElementById("quizExplanation").classList.add("hidden");
+    if (quizType === "ox") {
+        document.getElementById("oxNumber").innerText = (currentIndex + 1).toString().padStart(2, "0");
+        document.getElementById("oxQuestion").innerText = q.q;
+        document.getElementById("oxExplain").innerText = "";
+    }
 
-  document.getElementById("quizOptions").innerHTML = "";
-  document.getElementById("blankInput").classList.add("hidden");
+    if (quizType === "blank") {
+        document.getElementById("blankNumber").innerText = (currentIndex + 1).toString().padStart(2, "0");
+        document.getElementById("blankQuestion").innerText = q.q;
+        document.getElementById("blankExplain").innerText = "";
+        document.getElementById("blankInput").value = "";
+    }
 
-  if (mode === "ox") {
-    ["O","X"].forEach(op=>{
-      const b=document.createElement("button");
-      b.innerText=op;
-      b.onclick=()=>showAnswer((op==="O")===q.a, q.exp);
-      document.getElementById("quizOptions").appendChild(b);
-    });
-  }
+    if (quizType === "multi") {
+        document.getElementById("multiNumber").innerText = (currentIndex + 1).toString().padStart(2, "0");
+        document.getElementById("multiQuestion").innerText = q.q;
 
-  if (mode === "blank") {
-    const input=document.getElementById("blankInput");
-    input.classList.remove("hidden");
-    input.value="";
-    input.onchange=()=>showAnswer(input.value.trim()===q.a, q.exp);
-  }
+        const box = document.getElementById("multiOptions");
+        box.innerHTML = "";
 
-  if (mode === "cupid") {
-    q.options.forEach((op,i)=>{
-      const b=document.createElement("button");
-      b.innerText=op;
-      b.onclick=()=>showAnswer(i===q.a, q.exp);
-      document.getElementById("quizOptions").appendChild(b);
-    });
-  }
+        q.options.forEach((opt, index) => {
+            const div = document.createElement("div");
+            div.innerText = opt;
+            div.onclick = () => selectMulti(index + 1);
+            box.appendChild(div);
+        });
 
-  if (mode === "answerset") {
-    showAnswer("정답: "+q.a, q.exp);
-  }
+        document.getElementById("multiExplain").innerText = "";
+    }
+
+    if (quizType === "connect") {
+        document.getElementById("connectNumber").innerText = (currentIndex + 1).toString().padStart(2, "0");
+        document.getElementById("connectQuestion").innerText = q.q;
+
+        let html = `
+            <div>
+                ${q.left.map(i => `<div>${i}</div>`).join("")}
+            </div>
+            <div>
+                ${q.right.map(i => `<div>${i}</div>`).join("")}
+            </div>
+        `;
+
+        document.getElementById("connectColumns").innerHTML = html;
+        document.getElementById("connectExplain").innerText = "";
+    }
 }
 
-/* -----------------------------------
-   정답 + 해설 표시
------------------------------------ */
-function showAnswer(result, explanation) {
-  const box = document.getElementById("quizAnswer");
-  const exp = document.getElementById("quizExplanation");
+/* ------------------------------------------
+    OX 선택
+------------------------------------------- */
+function selectOX(choice) {
+    const q = quizData.ox[currentIndex];
 
-  box.classList.remove("hidden");
-  exp.classList.remove("hidden");
-
-  if (typeof result === "boolean") {
-    box.innerText = result ? "정답!" : "오답!";
-  } else {
-    box.innerText = result;
-  }
-
-  exp.innerText = explanation;
+    if (choice === q.a) {
+        document.getElementById("oxExplain").innerText = `정답!  ${q.exp}`;
+    } else {
+        document.getElementById("oxExplain").innerText = `오답!  정답은 ${q.a}.  ${q.exp}`;
+        saveWrong(q.q, q.a, q.exp);
+    }
 }
 
-/* -----------------------------------
-   앞 / 뒤
------------------------------------ */
-function nextQuestion() {
-  if (index < currentList.length - 1) { index++; loadQuestion(); }
-}
-function prevQuestion() {
-  if (index > 0) { index--; loadQuestion(); }
-}
+/* ------------------------------------------
+    빈칸 정답확인
+------------------------------------------- */
+document.getElementById("blankInput").addEventListener("change", () => {
+    const q = quizData.blank[currentIndex];
+    const input = document.getElementById("blankInput").value.trim();
 
-/* -----------------------------------
-   복습 카드(플립 카드 자동 생성)
------------------------------------ */
-const REVIEW = [
-  { q:"화장품 작용의 기준은?", a:"경미한 작용", exp:"법령상 화장품은 경미해야 한다." },
-  { q:"자격취소 후 재취득 기간?", a:"3년", exp:"3년 경과 후 재응시 가능." }
-];
+    if (input === q.a) {
+        document.getElementById("blankExplain").innerText = `정답!  ${q.exp}`;
+    } else {
+        document.getElementById("blankExplain").innerText =
+            `오답! 정답은 ${q.a}. ${q.exp}`;
+        saveWrong(q.q, q.a, q.exp);
+    }
+});
 
-function buildFlipCards() {
-  const box = document.getElementById("flipContainer");
-  box.innerHTML = "";
+/* ------------------------------------------
+    객관식 선택
+------------------------------------------- */
+function selectMulti(num) {
+    const q = quizData.multi[currentIndex];
 
-  REVIEW.forEach(item=>{
-    const card=document.createElement("div");
-    card.className="flip-card";
-
-    card.innerHTML=`
-      <div class="flip-inner">
-        <div class="flip-front">${item.q}</div>
-        <div class="flip-back"><b>${item.a}</b><br><br>${item.exp}</div>
-      </div>
-    `;
-
-    card.onclick=()=>card.classList.toggle("clicked");
-    box.appendChild(card);
-  });
+    if (num === q.a) {
+        document.getElementById("multiExplain").innerText = `정답! ${q.exp}`;
+    } else {
+        document.getElementById("multiExplain").innerText =
+            `오답! 정답은 ${q.options[q.a - 1]}. ${q.exp}`;
+        saveWrong(q.q, q.options[q.a - 1], q.exp);
+    }
 }
 
-buildFlipCards();
+/* ------------------------------------------
+    오답 저장
+------------------------------------------- */
+function saveWrong(question, answer, explain) {
+    wrongNotes.push({ question, answer, explain });
+    localStorage.setItem("wrongNotes", JSON.stringify(wrongNotes));
+}
+
+/* ------------------------------------------
+    다음 / 이전 문제
+------------------------------------------- */
+function nextQuiz() {
+    const q = quizData[quizType];
+    if (currentIndex < q.length - 1) currentIndex++;
+    loadQuiz();
+}
+
+function prevQuiz() {
+    if (currentIndex > 0) currentIndex--;
+    loadQuiz();
+}
+
+/* ------------------------------------------
+    복습 카드 플립
+------------------------------------------- */
+document.querySelector("#reviewCards .card").addEventListener("click", () => {
+    document.querySelector("#reviewCards .card").classList.toggle("flip");
+});
+
+/* ------------------------------------------
+    복습 카드 로딩
+------------------------------------------- */
+function loadReviewCard() {
+    const q = quizData.review[currentIndex];
+
+    document.getElementById("cardFront").innerText = q.q;
+    document.getElementById("cardBackAnswer").innerText = q.a;
+    document.getElementById("cardBackExplain").innerText = q.exp;
+}
+
+document.getElementById("reviewCards").addEventListener("click", loadReviewCard);
+
+/* ------------------------------------------
+    오답노트 출력
+------------------------------------------- */
+function loadWrongNote() {
+    if (wrongNotes.length === 0) {
+        document.getElementById("noteQuestion").innerText = "오답이 없습니다.";
+        document.getElementById("noteAnswer").innerText = "";
+        document.getElementById("noteExplain").innerText = "";
+        return;
+    }
+
+    const last = wrongNotes[wrongNotes.length - 1];
+
+    document.getElementById("noteQuestion").innerText = last.question;
+    document.getElementById("noteAnswer").innerText = last.answer;
+    document.getElementById("noteExplain").innerText = last.explain;
+}
+
+document.getElementById("wrongNote").addEventListener("click", loadWrongNote);
+
+/* ------------------------------------------
+    홈 화면 데이터 세팅
+------------------------------------------- */
+function setStatus() {
+    setTodayConcept();
+}
+
+/* 앱 시작 시 실행 */
+setStatus();
