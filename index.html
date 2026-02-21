@@ -1,266 +1,133 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>화조사 미니또</title>
-
-    <!-- 폰트 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-<div id="app">
+<!-- 메인 -->
+<div id="home" class="page active">
 
-    <!-- ------------------------- 홈 화면 ------------------------- -->
-    <section id="home" class="page active fade">
-        <div class="left-panel">
-            <div class="title-badge">2027 이기적</div>
-            <div class="main-title">화조사<br>미니또</div>
+    <div class="left-box">
+        <div class="title-tag">2027 이기적</div>
+        <div class="main-title">화조사<br>미니또</div>
 
-            <div class="status-box">
-                <div class="status-title">STATUS</div>
-                <div class="status-item">🔷 학습 진도율 🔷<br><span id="progressRate">0.00%</span></div>
-                <div class="status-item">🔥 누적 학습일 🔥<br><span id="studyDays">00일</span></div>
-                <div class="status-item">⭐ 미니또 포인트 ⭐<br><span id="miniPoints">0000p</span></div>
+        <div class="status-box">
+            <div class="status-title">STATUS</div>
+
+            <div class="status-item">
+                🔷 학습 진도율 🔷
+                <div id="progressRate">00.00%</div>
+            </div>
+
+            <div class="status-item">
+                🔥 누적 학습일 🔥
+                <div id="studyDays">00일</div>
+            </div>
+
+            <div class="status-item">
+                ⭐ 미니또 포인트 ⭐
+                <div id="miniPoints">0000p</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-box">
+
+        <!-- 오늘의 개념 -->
+        <div class="concept-box">
+            <div class="concept-title">오늘의 개념 한 줄</div>
+            <div id="todayConcept" class="concept-text">개념 한 줄 데이터</div>
+        </div>
+
+        <!-- 메뉴 -->
+        <div class="menu-box">
+            <div class="menu-btn" onclick="goPage('quizMenu')">퀴즈</div>
+            <div class="menu-btn" onclick="goPage('reviewPage')">복습</div>
+        </div>
+
+        <!-- 서비스 -->
+        <div class="service-wrapper">
+            <div class="service-title">이기적인 독자서비스 바로가기</div>
+
+            <div class="service-grid">
+
+                <div class="service-link" onclick="openLink('https://license.youngjin.com/artyboard/mboard.asp?strBoardID=Errata_l&intPage=1')">2027년판 정오표</div>
+                <div class="service-link" onclick="openLink('https://license.youngjin.com/artyboard/Mboard.asp?Action=view&strBoardID=notice&intSeq=130825')">정오표 이벤트</div>
+                <div class="service-link" onclick="openLink('https://license.youngjin.com/')">수험서 커뮤니티</div>
+
+                <div class="service-link" onclick="openLink('https://cafe.naver.com/f-e/cafes/19039057/menus/384?viewType=I')">또기적 학습자료집</div>
+                <div class="service-link" onclick="openLink('https://cafe.naver.com/f-e/cafes/19039057/menus/349')">1:1 독자문의</div>
+                <div class="service-link" onclick="openLink('https://cafe.naver.com/yjbooks')">스터디 카페</div>
+
+                <div class="service-link" onclick="openLink('https://youtube.com/playlist?list=PL6i7rGeEmTvrn8f0iwt7Ki9INiog4Dmfs')">무료 동영상 강의</div>
+                <div class="service-link" onclick="openLink('https://youtube.com/@ydot0789')">이기적 유튜브 채널</div>
+                <div class="service-link" onclick="openLink('https://license.youngjin.com/artyboard/mboard.asp?Action=view&strBoardID=event&intSeq=115423')">기출 복원 이벤트</div>
+
+                <div class="service-link" onclick="openLink('https://shop.youngjin.com/goods/view?no=1184')">도서 구매하기</div>
+                <div class="service-link" onclick="openLink('https://license.korcham.net/co/examguide.do?mm=34&cd=0202')">시행처 바로가기</div>
+                <div class="service-link" onclick="openLink('https://cafe.naver.com/yjbooks/47482')">감수자 & 베타테스터</div>
+
             </div>
         </div>
 
-        <div class="right-panel">
-            <div class="concept-box">
-                <div class="concept-title">오늘의 개념 한 줄</div>
-                <div id="todayConcept" class="concept-text">개념 한 줄 데이터</div>
-            </div>
+    </div>
+</div>
 
-            <div class="main-buttons">
-                <button class="purple-btn" onclick="goPage('quizSelect')">퀴즈</button>
-                <button class="purple-btn" onclick="goPage('reviewSelect')">복습</button>
-            </div>
+<!-- 퀴즈 메뉴 -->
+<div id="quizMenu" class="page">
+    <div class="page-title">퀴즈 유형 선택</div>
 
-            <div class="service-box">
-                <div class="service-title">이기적인 독자서비스 바로가기</div>
-                <div class="service-links">
-                    <span>2027년판 정오표</span>
-                    <span>정오표 이벤트</span>
-                    <span>수험서 커뮤니티</span>
-                    <span>뜨기적 학습자료집</span>
-                    <span>1:1 독자문의</span>
-                    <span>스터디 카페</span>
-                    <span>무료 동영상 강의</span>
-                    <span>이기적 유튜브 채널</span>
-                    <span>기출 복원 이벤트</span>
-                    <span>도서 구매하기</span>
-                    <span>시험처 바로가기</span>
-                    <span>감수자&베타테스터</span>
-                </div>
-            </div>
+    <div class="quiz-select" onclick="startQuiz('ox')">OX 퀴즈</div>
+    <div class="quiz-select" onclick="startQuiz('blank')">빈칸 퀴즈</div>
+    <div class="quiz-select" onclick="startQuiz('multi')">객관식 퀴즈</div>
+    <div class="quiz-select" onclick="startQuiz('connect')">연결 퀴즈</div>
+
+    <button class="back-btn" onclick="goPage('home')">← 돌아가기</button>
+</div>
+
+<!-- OX 퀴즈 -->
+<div id="oxQuiz" class="page">
+    <div class="quiz-num" id="oxNumber">01</div>
+    <div class="quiz-question" id="oxQuestion"></div>
+
+    <div class="quiz-btn-box">
+        <button class="ox-btn" onclick="selectOX('O')">O</button>
+        <button class="ox-btn" onclick="selectOX('X')">X</button>
+    </div>
+
+    <img id="feedbackImage" class="feedback-img" src="" alt="">
+
+    <div id="oxExplain" class="quiz-explain"></div>
+
+    <div class="nav-box">
+        <button onclick="prevQuiz()">이전</button>
+        <button onclick="nextQuiz()">다음</button>
+        <button onclick="goPage('home')">홈</button>
+    </div>
+</div>
+
+<!-- 복습 카드 -->
+<div id="reviewPage" class="page">
+    <div class="page-title">복습 카드</div>
+
+    <div id="reviewCard" class="review-card" onclick="flipCard()">
+        <div class="card-face front" id="cardFront">문제</div>
+        <div class="card-face back">
+            <div id="cardBackAnswer"></div>
+            <div id="cardBackExplain"></div>
         </div>
-    </section>
+    </div>
 
-
-    <!-- ------------------------- 퀴즈 선택 ------------------------- -->
-    <section id="quizSelect" class="page fade">
-        <div class="page-title">퀴즈 유형 선택</div>
-        <div class="grid-box">
-            <button class="gray-btn" onclick="startQuiz('ox')">스피드체크 OX</button>
-            <button class="gray-btn" onclick="startQuiz('blank')">빈틈을 메우는 빈칸</button>
-            <button class="gray-btn" onclick="startQuiz('multi')">정답 총집합</button>
-            <button class="gray-btn" onclick="startQuiz('connect')">개념어 링크</button>
-        </div>
-        <button class="home-btn" onclick="goPage('home')">홈 화면으로</button>
-    </section>
-
-
-    <!-- ------------------------- OX 퀴즈 ------------------------- -->
-    <section id="oxQuiz" class="page fade">
-        <div class="page-title">스피드체크 OX</div>
-
-        <div id="oxNumber" class="quiz-number">01</div>
-        <div id="oxQuestion" class="quiz-question">문제 내용</div>
-
-        <div class="ox-btn-box">
-            <button class="ox-btn o-btn" onclick="selectOX('O')">O</button>
-            <button class="ox-btn x-btn" onclick="selectOX('X')">X</button>
-        </div>
-
-        <div class="explain-section">
-            <div class="explain-title">한 줄 해설</div>
-            <div id="oxExplain" class="explain-box">해설 내용</div>
-        </div>
-
-        <div class="nav-btn-box">
-            <button class="nav-btn" onclick="prevQuiz()">←</button>
-            <button class="nav-btn" onclick="goPage('quizSelect')">퀴즈 선택</button>
-            <button class="nav-btn" onclick="goPage('home')">홈으로</button>
-            <button class="nav-btn" onclick="nextQuiz()">→</button>
-        </div>
-    </section>
-
-
-    <!-- ------------------------- 빈칸 ------------------------- -->
-    <section id="blankQuiz" class="page fade">
-        <div class="page-title">빈틈을 메우는 빈칸</div>
-
-        <div id="blankNumber" class="quiz-number">01</div>
-        <div id="blankQuestion" class="quiz-question">문제 내용</div>
-
-        <div class="input-section">
-            <div class="input-title">정답 입력</div>
-            <input id="blankInput" class="answer-input" placeholder="입력란">
-        </div>
-
-        <div class="explain-section">
-            <div class="explain-title">한 줄 해설</div>
-            <div id="blankExplain" class="explain-box">해설 내용</div>
-        </div>
-
-        <div class="nav-btn-box">
-            <button class="nav-btn" onclick="prevQuiz()">←</button>
-            <button class="nav-btn" onclick="goPage('quizSelect')">퀴즈 선택</button>
-            <button class="nav-btn" onclick="goPage('home')">홈으로</button>
-            <button class="nav-btn" onclick="nextQuiz()">→</button>
-        </div>
-    </section>
-
-
-    <!-- ------------------------- 객관식 ------------------------- -->
-    <section id="multiQuiz" class="page fade">
-        <div class="page-title">정답 총집합</div>
-
-        <div id="multiNumber" class="quiz-number">01</div>
-        <div id="multiQuestion" class="quiz-question">문제 내용</div>
-
-        <div id="multiOptions" class="multi-options"></div>
-
-        <div class="explain-section">
-            <div class="explain-title">한 줄 해설</div>
-            <div id="multiExplain" class="explain-box">해설 내용</div>
-        </div>
-
-        <div class="nav-btn-box">
-            <button class="nav-btn" onclick="prevQuiz()">←</button>
-            <button class="nav-btn" onclick="goPage('quizSelect')">퀴즈 선택</button>
-            <button class="nav-btn" onclick="goPage('home')">홈으로</button>
-            <button class="nav-btn" onclick="nextQuiz()">→</button>
-        </div>
-    </section>
-
-
-    <!-- ------------------------- 연결형 ------------------------- -->
-    <section id="connectQuiz" class="page fade">
-        <div class="page-title">개념어 링크</div>
-
-        <div id="connectNumber" class="quiz-number">01</div>
-        <div id="connectQuestion" class="quiz-question">문제 내용</div>
-
-        <div id="connectColumns" class="connect-columns"></div>
-
-        <div class="explain-section">
-            <div class="explain-title">한 줄 해설</div>
-            <div id="connectExplain" class="explain-box">해설 내용</div>
-        </div>
-
-        <div class="nav-btn-box">
-            <button class="nav-btn" onclick="prevQuiz()">←</button>
-            <button class="nav-btn" onclick="goPage('quizSelect')">퀴즈 선택</button>
-            <button class="nav-btn" onclick="goPage('home')">홈으로</button>
-            <button class="nav-btn" onclick="nextQuiz()">→</button>
-        </div>
-    </section>
-
-
-    <!-- ------------------------- 복습 선택 ------------------------- -->
-    <section id="reviewSelect" class="page fade">
-        <div class="page-title">복습 유형 선택</div>
-        <div class="grid-box">
-            <button class="gray-btn" onclick="goPage('zoomOut')">개념 줌 아웃</button>
-            <button class="gray-btn" onclick="goPage('diagram')">도표 모아보기</button>
-            <button class="gray-btn" onclick="goPage('reviewCards')">복습 카드</button>
-            <button class="gray-btn" onclick="goPage('wrongNote')">퀴즈 오답노트</button>
-        </div>
-        <button class="home-btn" onclick="goPage('home')">홈 화면으로</button>
-    </section>
-
-
-    <!-- ------------------------- 개념 줌 아웃 ------------------------- -->
-    <section id="zoomOut" class="page fade">
-        <div class="page-title">개념 줌 아웃</div>
-        <div id="zoomArea" class="big-box"></div>
-
-        <div class="nav-btn-box">
-            <button class="nav-btn" onclick="goPage('reviewSelect')">복습 선택</button>
-            <button class="nav-btn" onclick="goPage('home')">홈으로</button>
-        </div>
-    </section>
-
-
-    <!-- ------------------------- 도표 모아보기 ------------------------- -->
-    <section id="diagram" class="page fade">
-        <div class="page-title">도표 모아보기</div>
-        <div id="diagramArea" class="big-box"></div>
-
-        <div class="nav-btn-box">
-            <button class="nav-btn" onclick="goPage('reviewSelect')">복습 선택</button>
-            <button class="nav-btn" onclick="goPage('home')">홈으로</button>
-        </div>
-    </section>
-
-
-    <!-- ------------------------- 복습 카드 ------------------------- -->
-    <section id="reviewCards" class="page fade">
-        <div class="page-title">복습 카드</div>
-
-        <div class="card-wrapper">
-            <div class="card">
-                <div class="card-face card-front">
-                    <div class="card-label">문제</div>
-                    <div id="cardFront" class="card-text">문제 내용</div>
-                </div>
-                <div class="card-face card-back">
-                    <div class="card-label">정답</div>
-                    <div id="cardBackAnswer" class="card-text">정답 내용</div>
-                    <div class="card-label small">한 줄 해설</div>
-                    <div id="cardBackExplain" class="card-text small">해설 내용</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="nav-btn-box">
-            <button class="nav-btn" onclick="goPage('reviewSelect')">복습 선택</button>
-            <button class="nav-btn" onclick="goPage('home')">홈으로</button>
-        </div>
-    </section>
-
-
-    <!-- ------------------------- 오답노트 ------------------------- -->
-    <section id="wrongNote" class="page fade">
-        <div class="page-title">퀴즈 오답노트</div>
-
-        <div class="card-wrapper">
-            <div class="note-card">
-                <div class="note-face">
-                    <div class="card-label">문제</div>
-                    <div id="noteQuestion" class="card-text">문제 내용</div>
-                </div>
-                <div class="note-face">
-                    <div class="card-label">정답</div>
-                    <div id="noteAnswer" class="card-text">정답 내용</div>
-                    <div class="card-label small">한 줄 해설</div>
-                    <div id="noteExplain" class="card-text small">해설 내용</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="nav-btn-box">
-            <button class="nav-btn" onclick="goPage('reviewSelect')">복습 선택</button>
-            <button class="nav-btn" onclick="goPage('home')">홈으로</button>
-        </div>
-    </section>
-
+    <div class="nav-box">
+        <button onclick="prevReview()">이전</button>
+        <button onclick="nextReview()">다음</button>
+        <button onclick="goPage('home')">홈</button>
+    </div>
 </div>
 
 <script src="script.js"></script>
